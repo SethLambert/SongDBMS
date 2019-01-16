@@ -1,0 +1,59 @@
+<div class='container-fluid'>
+ <body>Welcome to my Million Song Dataset project. It features a subset of 10,000 random entries from the full-size dataset.<br/></p> 
+  
+  Find songs by:<br/i>
+  <form class="form-inline" action='index.php?type=getSong' method='post'>
+    <div class="form-group">
+      <input class="form-control" id='find' name='find' placeholder="Get Song">
+    </div>
+    <div class="form-group">
+      <select class="form-control" id='select' name='select' placeholder="Select by">
+       <option value='getSongByID'>Song ID</option>
+       <option value='getSongByTitle'>Song title</option>
+       <option value='getSongsByArtist'>By Artist</option>
+       <option value='getSongsByRelease'>On Release</option>
+       <option value='getSongsByGenre'>By Genre</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-default">Go</button>
+    </div>
+  </form> 
+  </br>
+
+  Browse:</br>
+  <ul>
+   <li><a href="?type=top100Songs">Top 100 Song</a></li>
+   <li><a href="?type=top100Artists">Top 100 Artists</a></li>
+  </ul></p>
+
+  View all:</br>
+  <ul>
+   <li><a href="?type=allSongs">Songs</a></li>
+   <li><a href="?type=allArtists">Artists</a></li>
+   <li><a href="?type=allReleases">Releases</a></li>
+   <li><a href="?type=allGenres">Genres</a></li>
+  </ul></p>
+
+  Edit an entry:</br>
+  <form class="form-inline" action='index.php?type=editEntry' method='post'>
+    <div class="form-group">
+      <input class="form-control" id="id" name="id"  placeholder="Song ID">
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-default">Edit</button>
+    </div>
+  </form>
+  </br>
+
+  <a href="?type=addSong" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Add a new song</a></br></p>
+
+  <b>Sources:</b></br>
+  Thierry Bertin-Mahieux, Daniel P.W. Ellis, Brian Whitman, and Paul Lamere.<br/> 
+  The Million Song Dataset. In Proceedings of the 12th International Society<br/>
+  for Music Information Retrieval Conference (ISMIR 2011), 2011.<br/></p>
+  Million Song Dataset, official website by Thierry Bertin-Mahieux,<br/>
+  available at: <a href="http://labrosa.ee.columbia.edu/millionsong/">http://labrosa.ee.columbia.edu/millionsong/</a><br/></p>
+ </body>
+</div>
+
