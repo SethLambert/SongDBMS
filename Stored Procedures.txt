@@ -1,0 +1,102 @@
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `addRecord`(IN `title` VARCHAR(255), IN `artst` VARCHAR(255), IN `rls` VARCHAR(255), IN `yr` INT(11), IN `term` VARCHAR(255), IN `temp` FLOAT, IN `drn` FLOAT, IN `loud` FLOAT, IN `mod` INT(11), IN `song_pop` FLOAT, IN `artist_pop` FLOAT, IN `sid` VARCHAR(255), IN `rid` VARCHAR(255), IN `aid` VARCHAR(255))
+    NO SQL
+begin
+INSERT INTO Song(song_id, song_title, terms, tempo, popularity, year)
+ 	VALUES(sid, title, term, temp, song_pop, yr);
+INSERT INTO Album(album_id, album_title)
+	VALUES(rid, rls);
+INSERT INTO Artist(artist_id, artist_name, popularity)
+	VALUES(aid, artst, artist_pop);
+INSERT INTO Audio(song_id, duration, loudness, `mode`)
+	VALUES(sid, drn, loud, `mod`);
+INSERT INTO Appears_on(album_id, artist_id)
+	VALUES(rid, artst);
+INSERT INTO `By`(song_id, artist_id)
+	VALUES(sid, aid);
+INSERT INTO `On`(album_id, song_id)
+	VALUES(rid, sid);
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `allArtists`()
+begin
+SELECT artist_name FROM Artist ORDER BY artist_name;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `allGenres`()
+begin
+SELECT `terms` FROM `Song` GROUP BY `terms`;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `allReleases`()
+begin
+SELECT album_title FROM Album ORDER BY album_title;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `allSongs`()
+begin
+SELECT a.song_title, c.artist_name FROM `Song` a, `By` b, `Artist` c WHERE a.song_id=b.song_id AND b.artist_id=c.artist_id ORDER BY a.song_title;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `getSongByID`(IN `id` VARCHAR(255))
+begin
+SELECT a.song_title, b.artist_name FROM `Song` a, `Artist` b, `By` c WHERE a.song_id=c.song_id AND b.artist_id=c.artist_id AND a.song_id=id;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `getSongByTitle`(IN `title` VARCHAR(255))
+begin
+SELECT a.song_title, b.artist_name FROM `Song` a, `Artist` b, `By` c WHERE a.song_id=c.song_id AND b.artist_id=c.artist_id AND a.song_title=title;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `getSongsByArtist`(IN `name` VARCHAR(255))
+    NO SQL
+begin
+SELECT a.song_title, b.artist_name FROM `Song` a, `Artist` b, `By` c WHERE a.song_id=c.song_id AND b.artist_id=c.artist_id AND b.artist_name=name;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `getSongsByGenre`(IN `trm` VARCHAR(255))
+    NO SQL
+begin       
+SELECT * FROM `Song` WHERE `terms`=trm;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `getSongsByRelease`(IN `id` VARCHAR(255))
+begin
+SELECT song.song_id, song.song_title, album.album_title 	
+FROM `Song` song, `On` o, `Album` album 
+	WHERE album.album_id=id
+		AND song.song_id=o.song_id 
+        AND o.album_id=id;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `selectSong`(IN `id` VARCHAR(255))
+begin
+SELECT a.song_id, a.song_title, a.terms, a.tempo, a.popularity, a.year
+FROM `Song` a
+WHERE a.song_id=id;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `top100Artists`()
+begin
+SELECT artist_name FROM Artist ORDER BY popularity DESC LIMIT 100;
+end
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `top100Songs2`()
+    NO SQL
+BEGIN
+
+CREATE TABLE new_tbl AS SELECT * FROM Song ORDER BY popularity DESC LIMIT 100;
+
+SELECT a.song_id, a.song_title, c.artist_name, a.popularity FROM `new_tbl` a LEFT JOIN `By` b ON a.song_id=b.song_id LEFT JOIN `Artist` c ON b.artist_id=c.artist_id;
+
+DROP TABLE new_tbl;
+
+END
+
+CREATE DEFINER=`lambertsj16`@`localhost` PROCEDURE `updateSong`(IN `id` VARCHAR(255), IN `title` VARCHAR(255), IN `trms` VARCHAR(255), IN `tmp` FLOAT, IN `pop` FLOAT, IN `yr` INT)
+    NO SQL
+begin
+UPDATE `Song` s
+	SET s.song_title=title, s.terms=trms,
+    	s.tempo=tmp, s.popularity=pop, s.year=yr
+	WHERE s.song_id=id;
+end
